@@ -1,38 +1,11 @@
-<android.support.design.widget.CoordinatorLayout
+<com.tunaemre.audiovisualizer.view.WaveVisualizer
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".MainActivity">
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" />
-
-    </android.support.design.widget.AppBarLayout>
-
-    <FrameLayout
-        android:id="@+id/content_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.tunaemre.audiovisualizer.view.WaveVisualizer
-            android:id="@+id/musicWave"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:colorGradient="true"
-            app:endColor="@color/colorEnd"
-            app:startColor="@color/colorStart"
-            app:waveColor="@color/colorAccent"
-            app:waveThickness="1" />
-    </FrameLayout>
-
-</android.support.design.widget.CoordinatorLayout>
+    app:colorGradient="true"
+    app:endColor="@color/colorEnd"
+    app:startColor="@color/colorStart"
+    app:waveColor="@color/colorAccent"
+    app:waveThickness="1" />

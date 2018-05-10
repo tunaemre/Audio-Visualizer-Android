@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void prepareActivity() {
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_REQUEST_RECORD_AUDIO);
             return;
@@ -59,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new MainFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
     }
 
 

@@ -25,8 +25,6 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 public class MainFragment extends Fragment implements Updatable {
 
-    private View mRootView;
-
     private AudioRecord mAudioRecord;
     private int mBufferSize;
     private WaveVisualizer mWaveVisualizer;
@@ -38,11 +36,11 @@ public class MainFragment extends Fragment implements Updatable {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_main, container, false);
+        mWaveVisualizer = (WaveVisualizer) inflater.inflate(R.layout.fragment_main, container, false);
 
         prepareFragment();
 
-        return mRootView;
+        return mWaveVisualizer;
     }
 
     @Override
@@ -62,8 +60,6 @@ public class MainFragment extends Fragment implements Updatable {
     }
 
     private void prepareFragment() {
-        mWaveVisualizer = (WaveVisualizer) mRootView.findViewById(R.id.musicWave);
-
         mBufferSize = AudioRecord.getMinBufferSize(44100, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
         mAudioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, 44100, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, mBufferSize);
 
