@@ -5,20 +5,23 @@ import android.support.annotation.NonNull;
 
 import com.google.android.agera.Result;
 import com.google.android.agera.Supplier;
+import com.tunaemre.audiovisualizer.fft.RealDoubleFFT;
 
-public class AnalyzeAudio implements Supplier<Result<short[]>> {
-
+public class AnalyzeAudio implements Supplier<Result<double[]>> {
+    private static RealDoubleFFT realDoubleFFT;
     private int mBufferSize;
     private AudioRecord mAudioRecord;
 
-    public  AnalyzeAudio(int bufferSize, AudioRecord audioRecord) {
+    public AnalyzeAudio(int bufferSize, AudioRecord audioRecord) {
         this.mBufferSize = bufferSize;
         this.mAudioRecord = audioRecord;
+
+        realDoubleFFT =  new RealDoubleFFT(mBufferSize);
     }
 
     @NonNull
     @Override
-    public Result<short[]> get() {
+    public Result<double[]> get() {
         try {
             Thread.sleep(10);
         }
@@ -28,17 +31,20 @@ public class AnalyzeAudio implements Supplier<Result<short[]>> {
         }
 
         short[] buffer = new short[mBufferSize];
+        double[] fftBuffer = new double[mBufferSize];
 
-        int bufferReadResult = 1;
+        int bufferReadResult;
 
         if (mAudioRecord != null) {
             bufferReadResult = mAudioRecord.read(buffer, 0, mBufferSize);
-            /*for (int i = 0; i < mBufferSize && i < bufferReadResult; i++) {
-                toTransform[i] = (double) buffer[i] / 32768.0; // signed
-                // 16
-            }*/
+
+            for (int i = 0; i < Math.min(mBufferSize, bufferReadResult); i++) {
+                fftBuffer[i] = (double) buffer[i] / 32768.0; // signed 16 bit
+            }
+
+            realDoubleFFT.ft(fftBuffer);
         }
 
-        return Result.success(buffer);
+        return Result.success(fftBuffer);
     }
 }

@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#00796B</color>
     <color name="colorAccent">#A50096</color>
 
+    <color name="colorLightAppBar">#FFFFFF</color>
+    <color name="colorLightStatusBar">#F0F0F0</color>
+
     <color name="colorStart">#662D8C</color>
     <color name="colorEnd">#ED1E79</color>
 </resources>

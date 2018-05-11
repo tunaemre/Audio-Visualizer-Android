@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ public class MainFragment extends Fragment implements Updatable {
     private UpdateObservable mUpdateObservable = new UpdateObservable();
 
     private ExecutorService mExecutor;
-    private Repository<Result<short[]>> mUpdateRepository;
+    private Repository<Result<double[]>> mUpdateRepository;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,12 +62,13 @@ public class MainFragment extends Fragment implements Updatable {
 
     private void prepareFragment() {
         mBufferSize = AudioRecord.getMinBufferSize(44100, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
+        Log.e("AudioRecord", "getMinBufferSize:" + mBufferSize);
         mAudioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, 44100, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, mBufferSize);
 
         mExecutor = newSingleThreadExecutor();
 
         mUpdateRepository = Repositories
-                .repositoryWithInitialValue(Result.<short[]>absent())
+                .repositoryWithInitialValue(Result.<double[]>absent())
                 .observe(mUpdateObservable)
                 .onUpdatesPerLoop()
                 .goTo(mExecutor)
@@ -76,9 +78,8 @@ public class MainFragment extends Fragment implements Updatable {
 
     @Override
     public void update() {
-        if (mUpdateRepository.get().succeeded()) {
+        if (mUpdateRepository.get().succeeded())
             mWaveVisualizer.updateVisualizer(mUpdateRepository.get().get());
-        }
 
         mUpdateObservable.postUpdate();
     }

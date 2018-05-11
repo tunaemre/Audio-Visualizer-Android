@@ -12,11 +12,10 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.tunaemre.audiovisualizer.R;
+import com.tunaemre.audiovisualizer.math.ArrayScaler;
 
 public class WaveVisualizer extends View {
-    int size = 4;
-    private short[] mBytes;
-    private float[] mPoints;
+    private double[] mDoubles;
     private Rect mRect = new Rect();
     private Config mConfig;
 
@@ -36,38 +35,35 @@ public class WaveVisualizer extends View {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        mBytes = null;
+        mDoubles = null;
         mConfig = new Config(context, attrs, this);
     }
 
-    public void updateVisualizer(short[] bytes) {
-        mBytes = bytes;
+    public void updateVisualizer(double[] doubles) {
+        if (doubles.length > 512) {
+            mDoubles = ArrayScaler.getInstance(512).scale(doubles);
+        }
+        else
+            mDoubles = doubles;
+
         invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (mBytes == null) {
+        if (mDoubles == null)
             return;
-        }
-        if (mPoints == null || mPoints.length < mBytes.length * size) {
-            mPoints = new float[mBytes.length * size];
-        }
+
         mRect.set(0, 0, getWidth(), getHeight());
-        for (int i = 0; i < mBytes.length - 1; i++) {
-            mPoints[i * size] = mRect.width() * i / (mBytes.length - 1);
-            mPoints[i * size + 1] = mRect.height() / 2 + ((byte) (mBytes[i] + 32768)) * (mRect.height() / 2) / 1000;
-            mPoints[i * size + 2] = mRect.width() * (i + 1) / (mBytes.length - 1);
-            mPoints[i * size + 3] = mRect.height() / 2 + ((byte) (mBytes[i + 1] + 32768)) * (mRect.height() / 2) / 1000;
+
+        for (int i = 0; i < mDoubles.length; i++) {
+            int x = mRect.width() * (i + 1) / (mDoubles.length - 1);
+            int maxY = mRect.height();
+            int miny = (int) (maxY - (mDoubles[i] * maxY / 50));
+
+            canvas.drawLine(x, miny, x, maxY, mConfig.getPaintWave());
         }
-        if (mConfig.getColorGradient()) {
-            mConfig.resetPaint();
-            mConfig.setGradients(this);
-        } else {
-            mConfig.resetPaint();
-        }
-        canvas.drawLines(mPoints, mConfig.getPaintWave());
     }
 
     public Config getConfig() {
@@ -158,7 +154,7 @@ public class WaveVisualizer extends View {
 
         public Config setColorGradient(Boolean colorGradient) {
             this.mColorGradient = colorGradient;
-            mWaveVisualizer.invalidate();
+
             return this;
         }
 
@@ -172,14 +168,6 @@ public class WaveVisualizer extends View {
             return this;
         }
 
-        public Paint setGradients(WaveVisualizer waveVisualizer) {
-            mPaint.setShader(new LinearGradient(0, 0,
-                    waveVisualizer.getWidth(), 0,
-                    mStartColor, mEndColor, Shader.TileMode.MIRROR));
-            waveVisualizer.invalidate();
-            return mPaint;
-        }
-
         public Paint resetPaint() {
             mPaint = new Paint();
             mPaint.setStrokeWidth(mThickness);
@@ -187,6 +175,8 @@ public class WaveVisualizer extends View {
             mPaint.setStyle(Paint.Style.FILL);
             mPaint.setColor(mColor);
             mPaint.setAlpha(255);
+            if (mColorGradient)
+                mPaint.setShader(new LinearGradient(0, 0, mWaveVisualizer.getWidth(), 0, mStartColor, mEndColor, Shader.TileMode.MIRROR));
             return mPaint;
         }
     }

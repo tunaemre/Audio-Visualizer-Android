@@ -8,4 +8,4 @@
     app:endColor="@color/colorEnd"
     app:startColor="@color/colorStart"
     app:waveColor="@color/colorAccent"
-    app:waveThickness="1" />
+    app:waveThickness="6" />
