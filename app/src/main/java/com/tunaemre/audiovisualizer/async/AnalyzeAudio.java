@@ -39,10 +39,10 @@ public class AnalyzeAudio implements Supplier<Result<double[]>> {
             bufferReadResult = mAudioRecord.read(buffer, 0, mBufferSize);
 
             for (int i = 0; i < Math.min(mBufferSize, bufferReadResult); i++) {
-                fftBuffer[i] = (double) buffer[i] / 32768.0; // signed 16 bit
+                fftBuffer[i] = (double) buffer[i] / 32768.0; // signed 16 bit short
             }
 
-            realDoubleFFT.ft(fftBuffer);
+            realDoubleFFT.forwardTransform(fftBuffer);
         }
 
         return Result.success(fftBuffer);
