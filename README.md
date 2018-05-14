@@ -6,6 +6,6 @@ Google Agera used for reactive programming: https://github.com/google/agera
 Apache Commons Math library used for interpolation algorithm: http://commons.apache.org/proper/commons-math
 
 <p align="center">
-  ![Screenshots](https://raw.githubusercontent.com/tunaemre/Audio-Visualizer-Android/master/screenshot_1.png)
-  ![Screenshots](https://raw.githubusercontent.com/tunaemre/Audio-Visualizer-Android/master/screenshot_2.png)
+  <img src="https://raw.githubusercontent.com/tunaemre/Audio-Visualizer-Android/master/screenshot_1.png">
+  <img src="https://raw.githubusercontent.com/tunaemre/Audio-Visualizer-Android/master/screenshot_2.png">
 </p>
